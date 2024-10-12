@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Users List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style5.css}">
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<br><br> <!-- Spacing between the button and the table -->
+
+<div class="container">
+    <h6>Registered users</h6>
+    <a href="/register" class="btn btn-success">Register New User</a>
+<table class="table blue-table">
+    <thead>
+    <tr>
+        <th>Registration Date</th>
+        <th>Email</th>
+        <th>User Type</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${usersList}">
+        <td th:text="${user.registrationDate}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.userTypeId != null ? user.userTypeId.userTypeName : 'N/A'}"></td>
+       <!-- <td th:text="${user.userTypeId.userTypeName}"></td>-->
+        <td>
+            <!-- Edit Button -->
+            <a th:href="@{/users/edit/{id}(id=${user.userId})}" class="button btn btn-primary">Edit</a>
+
+            <!-- Delete Button with Confirmation -->
+            <a th:href="@{/users/delete/{id}(id=${user.userId})}"
+               class="button btn btn-danger"
+               onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+</body>
+</html>

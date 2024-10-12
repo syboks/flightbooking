@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Customer Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style5.css}" />
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<h1>Customer Details</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table blue-table">
+                <tr>
+                    <th>First Name:</th>
+                    <td th:text="${customer.firstName}"></td>
+                </tr>
+                <tr class="col-md-6">
+                    <th>Last Name:</th>
+                    <td th:text="${customer.lastName}"></td>
+                </tr>
+                <tr class="col-md-6">
+                    <th>Passport No:</th>
+                    <td th:text="${customer.passportNo}"></td>
+                </tr>
+                <tr class="col-md-6">
+                    <th>ID No:</th>
+                    <td th:text="${customer.idNo}"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <table class="table blue-table">
+                <tr>
+                    <th>Email:</th>
+                    <td th:text="${customer.email}"></td>
+                </tr>
+                <tr>
+                    <th>Phone No:</th>
+                    <td th:text="${customer.phoneNo}"></td>
+                </tr>
+                <tr class="col-md-6">
+                    <th>Address:</th>
+                    <td th:text="${customer.address}"></td>
+                </tr>
+                <tr class="col-md-6">
+                    <th>Next of Kin:</th>
+                    <td th:text="${customer.nextOfKin}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+<a th:href="@{/customers}" class="btn btn-secondary">Back</a>
+<a th:href="@{/bookings/new(customerId=${customer.id})}" class="btn btn-success">New Booking</a>
+<a th:href="@{/customers/{id}/bookings/new(id=${customer.id})}" class="button">Add Booking</a>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Inclusion Form</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1 th:text="${inclusion.id == null} ? 'Add New Inclusion' : 'Edit Inclusion'"></h1>
+
+<form th:action="@{/inclusions}" th:object="${inclusion}" method="post">
+    <input type="hidden" th:field="*{id}" />
+
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" th:field="*{name}" required />
+    </div>
+
+    <div>
+        <button type="submit">Save</button>
+        <a th:href="@{/inclusions}">Cancel</a>
+    </div>
+</form>
+</body>
+</html>

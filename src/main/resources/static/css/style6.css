@@ -1,0 +1,186 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #343a40;
+    line-height: 1.6;
+    background-attachment: fixed;
+    animation: fadeInBody 1s ease-in-out; /* Fade in body */
+}
+
+/* Fade-In Animation for Body */
+@keyframes fadeInBody {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.login-box {
+    background: #ffffff;
+    /* background: linear-gradient(to bottom right, #ffffff, #a4b3d5) */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    width: 700px;
+    text-align: center;
+}
+
+/* Buttons */
+button, .custom-btn {
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    background-color: #28a745;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover, .custom-btn:hover {
+    background-color: #218838;
+    transform: translateY(-3px); /* Lift on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+}
+
+/* Containers with Subtle Colors and Fade-In Animation */
+.container-box, .container-1, form {
+    background: linear-gradient(to bottom right, #ffffff, #e0f7fa); /* Subtle blue gradient */
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: fadeInContainer 0.8s ease-in-out; /* Fade in containers */
+}
+
+.container-box:nth-child(odd),
+.container-1:nth-child(odd),
+form:nth-child(odd) {
+    background: linear-gradient(to bottom right, #ffffff, #e8f5e9); /* Subtle green gradient */
+}
+
+.container-box:nth-child(even),
+.container-1:nth-child(even),
+form:nth-child(even) {
+    background: linear-gradient(to bottom right, #ffffff, #e3f2fd); /* Light blue gradient */
+}
+
+/* Fade-In Animation for Containers */
+@keyframes fadeInContainer {
+    0% {
+        opacity: 0;
+        transform: translateY(20px); /* Slide up */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); /* Natural position */
+    }
+}
+
+/* Navbar */
+.navbar {
+    background-color: #007bff;
+    border-bottom: 2px solid #0056b3;
+    animation: fadeInNavbar 1.2s ease-in-out; /* Fade in navbar */
+}
+
+@keyframes fadeInNavbar {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px); /* Slide down */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); /* Natural position */
+    }
+}
+
+/* Input Fields */
+input, select {
+    font-size: 15px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #f1f3f5;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus, select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+/* Headings */
+h1, h3 {
+    font-size: 26px;
+    color: #007bff;
+    margin-bottom: 20px;
+    font-weight: 500;
+    animation: fadeInHeading 1s ease-in-out; /* Fade in headings */
+}
+
+@keyframes fadeInHeading {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px); /* Slide from left */
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0); /* Natural position */
+    }
+}
+
+/* Other Styles */
+#total {
+    font-weight: bold;
+    color: #007bff;
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.remove-product {
+    background-color: #dc3545;
+    color: #ffffff;
+    padding: 5px 10px;
+    font-size: 13px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.remove-product:hover {
+    background-color: #c82333;
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767.98px) {
+    h1, h3 {
+        font-size: 22px;
+    }
+
+    input, select, button {
+        font-size: 14px;
+        padding: 8px;
+    }
+}

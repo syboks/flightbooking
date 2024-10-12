@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/style5.css}" />
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+<h1>Payment List</h1>
+
+<table id="customerTable" class="display" border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Transaction Date</th>
+        <th>Amount Paid</th>
+        <th>Customer</th>
+        <th>Receipt Number</th>
+        <th>Payment Method</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="payment : ${payments}">
+        <td th:text="${payment.id}"></td>
+        <td th:text="${payment.transactionDate}">Transaction Date</td>
+        <td th:text="${payment.amountPaid}"></td>
+        <td th:text="${payment.getBooking().customer.getFirstName()+' '+payment.getBooking().customer.getLastName()}"></td>
+        <td th:text="${payment.receiptNo}"></td>
+        <td th:text="${payment.paymentMethod}"></td>
+        <td>
+            <a th:href="@{/payments/edit/{id}(id=${payment.id})}">Edit</a>
+            <a th:href="@{/payments/delete/{id}(id=${payment.id})}" onclick="return confirm('Are you sure?');">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<br/>
+<a th:href="@{/payments/new}">Add New Payment</a>
+<script>
+    $(document).ready(function() {
+        $('#customerTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthChange": false,
+            "pageLength": 10,
+            "dom": 'Bfrtip',  // Add this line to show the buttons
+            "buttons": [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+</body>
+</html>

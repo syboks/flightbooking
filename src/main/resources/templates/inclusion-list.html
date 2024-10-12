@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Inclusion List</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>Inclusion List</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="inclusion : ${inclusions}">
+        <td th:text="${inclusion.id}"></td>
+        <td th:text="${inclusion.name}"></td>
+        <td>
+            <a th:href="@{/inclusions/details/{id}(id=${inclusion.id})}">Details</a>
+            <a th:href="@{/inclusions/edit/{id}(id=${inclusion.id})}">Edit</a>
+            <a th:href="@{/inclusions/delete/{id}(id=${inclusion.id})}" onclick="return confirm('Are you sure?');">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<br/>
+<a th:href="@{/inclusions/new}">Add New Inclusion</a>
+</body>
+</html>

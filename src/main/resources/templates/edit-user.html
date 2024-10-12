@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style5.css}">
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+<div class="container mt-5">
+    <h2>Edit User</h2>
+    <form th:action="@{/users/edit/{userId}(userId=${user.userId})}" th:object="${user}" method="post">
+        <!-- Email -->
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Enter email" required>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Enter password" required>
+        </div>
+
+        <!-- User Type -->
+        <div class="form-group">
+            <label for="userType">User Type</label>
+            <select class="form-control" id="userType" th:field="*{userTypeId.userTypeId}">
+<!--                <option th:each="userType : ${getAllTypes}" th:value="${userType.userTypeId}" th:text="${userType.name}"></option>-->
+                <option th:each="userType : ${userTypes}" th:value="${userType.userTypeId}" th:text="${userType.userTypeName}"></option>
+            </select>
+        </div>
+
+        <!-- Active Status -->
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="isActive" th:field="*{active}">
+            <label class="form-check-label" for="isActive">Active</label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Update User</button>
+
+        <!-- Cancel Button -->
+        <a th:href="@{/users}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

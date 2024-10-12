@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Customer Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" th:href="@{/css/style5.css}" />
+
+</head>
+<body>
+<!-- Navbar -->
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div >
+    <div class="container">
+        <h1>Customer Details</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table blue-table">
+                    <tr>
+                        <th>First Name:</th>
+                        <td th:text="${customer.firstName}"></td>
+                    </tr>
+                    <tr class="col-md-6">
+                        <th>Last Name:</th>
+                        <td th:text="${customer.lastName}"></td>
+                    </tr>
+                    <tr class="col-md-6">
+                        <th>Passport No:</th>
+                        <td th:text="${customer.passportNo}"></td>
+                    </tr>
+                    <tr class="col-md-6">
+                        <th>ID No:</th>
+                        <td th:text="${customer.idNo}"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table blue-table">
+                    <tr>
+                        <th>Email:</th>
+                        <td th:text="${customer.email}"></td>
+                    </tr>
+                    <tr>
+                        <th>Phone No:</th>
+                        <td th:text="${customer.phoneNo}"></td>
+                    </tr>
+                    <tr class="col-md-6">
+                        <th>Address:</th>
+                        <td th:text="${customer.address}"></td>
+                    </tr>
+                    <tr class="col-md-6">
+                        <th>Next of Kin:</th>
+                        <td th:text="${customer.nextOfKin}"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <a th:href="@{/customers}" class="btn btn-secondary">Back</a>
+        <a th:href="@{/bookings/new(customerId=${customer.id})}" class="btn btn-primary">New Booking</a>
+<!--        <a th:href="@{/customers/{id}/bookings/new(id=${customer.id})}" class="button">Add Booking</a>-->
+
+    </div>
+</div>
+    <div class="container">
+        <table id="customerTable" class="display" border="1">
+        <thead>
+        <tr>
+            <th>Price</th>
+    <!--        <th>Departure</th>-->
+            <th>Destination</th>
+            <th>Travel Date</th>
+            <th>Payment Deadline</th>
+            <th>Payment Status</th>
+           <!-- <th>Airline</th>
+            <th>Sales Rep</th>-->
+            <th>Package</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="booking : ${bookings}">
+            <td th:text="${booking.price}">Price</td>
+    <!--        <td th:text="${booking.departure}">Departure</td>-->
+            <td th:text="${booking.destination}">Destination</td>
+            <td th:text="${booking.departureDate}">Travel Date</td>
+            <td th:text="${booking.arrivalDate}">Payment Deadline</td>
+            <td th:text="${booking.paymentStatus}">Payment Status</td>
+    <!--        <td th:text="${booking.airline}">Airline</td>-->
+    <!--        <td th:text="${booking.salesRep}">Sales Rep</td>-->
+            <td th:text="${booking.pkg.getName()}">Package</td>
+
+            <td>
+                <a sec:authorize="hasAuthority('admin')" th:href="@{/bookings/delete/{id}(id=${booking.id})}" class="btn btn-danger">Delete</a> |
+                <a sec:authorize="hasAuthority('admin')" th:href="@{/bookings/edit/{id}(id=${booking.id})}" class="btn btn-primary">Edit</a> |
+                <a th:href="@{/bookings/details/{id}(id=${booking.id})}"  class="btn btn-success">Details</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+
+<script>
+    $(document).ready(function() {
+        $('#customerTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthChange": false,
+            "pageLength": 10,
+            "dom": 'Bfrtip',  // Add this line to show the buttons
+            "buttons": [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+        // Add click event listener to each row
+        $('#customerTable tbody').on('click', 'tr', function() {
+            const id = $(this).data('id'); // Get the ID from the row's data-id attribute
+            if (id) {
+                window.location.href = '/customers/details/' + id; // Redirect to the details page
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Booking List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" th:href="@{/css/style5.css}" />>
+</head>
+<body>
+
+<!-- Navbar -->
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container-1">
+    <h3>Booking List</h3>
+<table id="bookingTable" class="display" border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+<!--        <th>Customer</th>-->
+        <th>Package</th>
+<!--        <th>Departure</th>-->
+        <th>Destination</th>
+        <th>Travel Date</th>
+        <th>Payment Deadline</th>
+        <th>Passport No</th>
+        <th>Client's Name</th>
+<!--        <th>Total Paid</th>-->
+<!--        <th>Booking Status</th>-->
+        <th>Payment Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="booking : ${bookings}">
+        <td th:text="${booking.id}"></td>
+<!--        <td th:text="${booking.pkg.name}"></td>-->
+        <td th:text="${booking.pkg != null ? booking.pkg.name : 'N/A'}"></td>
+<!--        <td th:text="${booking.departure}"></td>-->
+        <td th:text="${booking.destination}"></td>
+        <td th:text="${booking.departureDate}">Travel Date</td>
+        <td th:text="${booking.arrivalDate}">Payment Deadline</td>
+        <td th:text="${booking.customer != null ? booking.customer.passportNo : 'N/A'}"></td>
+        <td th:text="${booking.customer != null ? booking.customer.firstName+' '+booking.customer.lastName : 'N/A'}"></td>
+
+<!--        <td th:text="${booking.totalPaid}"></td>-->
+<!--        <td th:text="${booking.bookingStatus}"></td>-->
+        <td th:text="${booking.paymentStatus}"></td>
+
+        <td>
+            <a  th:href="@{/bookings/details/{id}(id=${booking.id})}" class="btn btn-success">Details</a>|
+            <a sec:authorize="hasAuthority('admin')" th:href="@{/bookings/edit/{id}(id=${booking.id})}" class="btn btn-primary">Edit</a>|
+            <a sec:authorize="hasAuthority('admin')" th:href="@{/bookings/delete/{id}(id=${booking.id})}" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+<!--</div>-->
+<br/>
+<!--<a th:href="@{/bookings/new}">Add New Booking</a>-->
+<script>
+    $(document).ready(function() {
+        $('#bookingTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthChange": false,
+            "pageLength": 10,
+            "dom": 'Bfrtip',  // Add this line to show the buttons
+            "buttons": [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+        // Add click event listener to each row
+        $('#bookingTable tbody').on('click', 'tr', function() {
+            const id = $(this).data('id'); // Get the ID from the row's data-id attribute
+            if (id) {
+                window.location.href = '/customers/details/' + id; // Redirect to the details page
+            }
+        });
+    });
+</script>
+</body>
+</html>

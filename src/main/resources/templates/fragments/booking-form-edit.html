@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Booking Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style5.css}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Blacktrotters</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/customers}">Customers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/bookings}">Bookings</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/packages}">Packages</a>
+            </li>
+
+        </ul>
+    </div>
+</nav>
+
+
+<div class="container">
+    <h3 th:text="${booking.id == null} ? 'Add New Booking' : 'Edit Booking'"></h3>
+<form th:action="@{/bookings/save}" th:object="${booking}" method="post">
+    <input type="hidden" th:field="*{id}" />
+    <input type="hidden" th:field="*{customer.id}" />
+    <!-- Hidden input to track products to delete -->
+    <input type="hidden" id="productsToDelete" name="productsToDelete" th:value="${''}" />
+    <div class="container-box">
+        <div class="row">
+            <div class="col-md-3">
+                <label for="package">Package:</label>
+                <select id="package" th:field="*{pkg.id}" required>
+                    <option value="" disabled selected>Select Package</option>
+                    <option th:each="pkg : ${packages}"
+                            th:value="${pkg.id}"
+                            th:text="${pkg.name}">
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="price">Price:</label>
+                <input type="number" id="price1" th:field="*{price}" readonly />
+            </div>
+            <div class="col-md-3">
+                <label for="totalPaid">Total Paid:</label>
+                <input type="number" id="totalPaid" th:field="*{totalPaid}" readonly />
+            </div>
+
+            <div class="col-md-3">
+                <label for="departure">Departure:</label>
+                <input type="text" id="departure" th:field="*{departure}" required />
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-3">
+                <label for="destination">Destination:</label>
+                <input type="text" id="destination" th:field="*{destination}" required />
+            </div>
+            <div class="col-md-3">
+                <label for="departureDate">Travel Date:</label>
+                <input type="date" id="departureDate"  th:field="*{departureDate}" required />
+            </div>
+
+            <div class="col-md-3">
+                <label for="arrivalDate">Payment Deadline Date:</label>
+                <input type="date" id="arrivalDate" th:field="*{arrivalDate}" />
+            </div>
+
+            <div class="col-md-3">
+                <label for="visa">Visa:</label>
+                <select id="visa" th:field="*{visa}" required>
+                    <option value=""  selected>Choose Visa Option</option>
+                    <option value="not_required">Not Required</option>
+                    <option value="visa_on_arrival">Visa on Arrival</option>
+                    <option value="online_visa">Online Visa</option>
+                    <option value="consular_visa">Consular Visa</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="dropdown-container">
+                    <div>
+                        <label for="adults">Adults:</label>
+                        <select id="numAdults" th:field="*{numAdults}">
+                            <option value="1">1</option>
+                            <option value="2" selected>2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="children">Children:</label>
+                        <select id="numChildren" th:field="*{numChildren}">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="infants">Infants:</label>
+                        <select id="numInfants" th:field="*{numInfants}">
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+             </div>
+            <div class="col-md-2">
+                <label for="salesRep">Sales Rep:</label>
+                <input type="text" id="salesRep" th:field="*{salesRep}" required />
+            </div>
+            <div class="col-md-2">
+                <label for="refNumber">Reference Number:</label>
+                <input type="text" id="refNumber" th:field="*{refNumber}" required />
+            </div>
+            <div class="col-md-2">
+            <label for="paymentStatus">Payment Status:</label>
+            <select id="paymentStatus" th:field="*{paymentStatus}" required>
+                <option value="UNPAID">Unpaid</option>
+                <option value="PARTIALLY_PAID">Partially Paid</option>
+                <option value="PAID">Paid</option>
+            </select>
+        </div>
+        </div>
+    </div>
+
+    <div class="container-box">
+
+    <button type="button" id="addProduct">Add Product</button>
+        <div class="row">
+            <div class="col-md-3">
+                <label>Product:</label>
+            </div>
+            <div class="col-md-2">
+                <label>Price:</label>
+            </div>
+            <div class="col-md-2">
+                <label>Start Date:</label>
+            </div>
+            <div class="col-md-2">
+                <label>Payment Deadline:</label>
+            </div>
+            <div class="col-md-1">
+                <label># Days:</label>
+            </div>
+            <div class="col-md-1">
+                <label>Platform:</label>
+            </div>
+            <div class="col-md-1">
+                <label>Action:</label>
+            </div>
+        </div>
+    <div id="productList">
+        <div th:each="product, iterStat : ${booking.products}">
+            <div class="row">
+                <!--<div class="col-md-3">
+                    <input type="text" th:field="*{products[__${iterStat.index}__].productName}" required/>
+                </div>-->
+                <div class="col-md-3">
+                    <select th:field="*{products[__${iterStat.index}__].productName}" class="form-control" id="productSelect_${iterStat.index}">
+                        <option th:each="item : ${items}" th:value="${item.name}" th:text="${item.name}"></option>
+                        <option value="new">Add New Item</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="number"  th:field="*{products[__${iterStat.index}__].price}" class="product-price  " required />
+                </div>
+                <div class="col-md-2">
+                    <input type="date" th:field="*{products[__${iterStat.index}__].startDate}" />
+                </div>
+                <div class="col-md-2">
+                    <input type="date" th:field="*{products[__${iterStat.index}__].paymentDeadlineDate}" />
+                </div>
+                <div class="col-md-1">
+                    <input type="number" th:field="*{products[__${iterStat.index}__].numDays}" />
+                </div>
+                <div class="col-md-1">
+                    <input type="text" th:field="*{products[__${iterStat.index}__].platform}" />
+                </div>
+                <div class="col-md-1">
+                    <button type="button" th:onclick="'removeProduct(this)'" class="remove-product">X</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 d-flex align-items-center mb-3">
+            <label for="total" class="me-2">Total:</label>
+            <input type="number" id="total" class="form-control flex-grow-1 " readonly  />
+        </div>
+    </div>
+
+
+
+    <div class="row">
+
+        <div class="col-6 text-center">
+            <a th:href="@{/customers/details/{id}(id=${customer.id})}" class="btn btn-secondary">Back</a>
+        </div>
+      <!--  <div class="col-6 text-center">
+            <button type="button" onclick="window.history.back();" style="width: 150px;">Cancel</button>
+        </div>-->
+        <div class="col-6 text-center">
+            <button type="submit" style="width: 150px;">Save</button>
+        </div>
+    </div>
+</form>
+    <!-- Modal -->
+    <div class="modal fade" id="addItemModal" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addItemModalLabel">Add New Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addItemForm" th:action="@{/items/add}" method="post">
+                        <div class="form-group">
+                            <label for="itemName">Item Name</label>
+                            <input type="text" class="form-control" id="itemName" name="name" required>
+                        </div>
+                        <!-- Add more fields as needed -->
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        let productIndex = [[${#lists.size(booking.products)}]];
+
+        $('#addProduct').click(function () {
+            let productForm = `
+                <div class="row">
+                    <div class="col-md-3">
+                         <input type="text" name="products[${productIndex}].productName" required/>
+                     </div>
+                      <div class="col-md-2">
+                        <input type="number"  name="products[${productIndex}].price" class="product-price" required/>
+                      </div>
+                      <div class="col-md-2">
+                        <input type="date"  name="products[${productIndex}].startDate"  />
+                      </div>
+                       <div class="col-md-2">
+                        <input type="date"  name="products[${productIndex}].paymentDeadlineDate"  />
+                      </div>
+                      <div class="col-md-1">
+                        <input type="number"  name="products[${productIndex}].numDays"  />
+                      </div>
+                      <div class="col-md-1">
+                        <input type="text"  name="products[${productIndex}].platform"  />
+                      </div>
+                      <div class="col-md-1">
+<!--                            <label>Action:</label>-->
+                            <button type="button" onclick="removeProduct(this)" class="remove-product">X</button>
+                      </div>
+
+                </div>`;
+            $('#productList').append(productForm);
+            productIndex++;
+            updateTotal();
+        });
+        $('#productList').on('input', '.product-price', function() {
+            updateTotal();  // Update total when a product price changes
+        });
+    });
+
+    function removeProduct(button) {
+        let row = $(button).closest('.row');
+        let productId = row.find('input[name*=".id"]').val(); // Assuming there's an input field for product ID
+        if (productId) {
+            let productsToDelete = $('#productsToDelete').val();
+            productsToDelete += productId + ',';
+            $('#productsToDelete').val(productsToDelete);
+        }
+        row.remove();
+        updateTotal();
+    }
+    function updateTotal() {
+        let total = 0;
+        $('.product-price').each(function() {
+            let price = parseFloat($(this).val());
+            if (!isNaN(price)) {
+                total += price;
+            }
+        });
+        $('#total').val(total.toFixed(2));
+        $('#price1').val(total.toFixed(2));  // Update the hidden pricex field
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let priceField = document.getElementById('price');
+        let departureDateField = document.getElementById('departureDate');
+        let arrivalDateField = document.getElementById('arrivalDate');
+
+        if (!priceField || !departureDateField || !arrivalDateField) {
+            console.error('Price, Departure Date, or Arrival Date field not found!');
+            return;
+        }
+
+        document.getElementById('package').addEventListener('change', function() {
+            let pkgId = this.value;
+            if (pkgId) {
+                fetch('/packages/' + pkgId)
+                    .then(response => response.json())
+                    .then(pkg => {
+                        // Set the price field value
+                        priceField.value = pkg.price;
+
+                        // Set min and max for the departureDate and arrivalDate fields
+                        if (pkg.startDate && pkg.endDate) {
+                            departureDateField.min = pkg.startDate;
+                            departureDateField.max = pkg.endDate;
+
+                            arrivalDateField.min = pkg.startDate;
+                            arrivalDateField.max = pkg.endDate;
+                        } else {
+                            departureDateField.min = '';
+                            departureDateField.max = '';
+
+                            arrivalDateField.min = '';
+                            arrivalDateField.max = '';
+                        }
+                    });
+            } else {
+                priceField.value = '';
+                departureDateField.min = '';
+                departureDateField.max = '';
+
+                arrivalDateField.min = '';
+                arrivalDateField.max = '';
+            }
+        });
+    });
+</script>
+<script>
+    document.getElementById('departureDate').addEventListener('change', function() {
+        const departureDate = new Date(this.value);
+        if (!isNaN(departureDate.getTime())) {
+            // Subtract 45 days from the departure date
+            departureDate.setDate(departureDate.getDate() - 45);
+
+            // Format the date to yyyy-mm-dd
+            const formattedDate = departureDate.toISOString().split('T')[0];
+
+            // Set the arrivalDate input value
+            document.getElementById('arrivalDate').value = formattedDate;
+        }
+    });
+</script>
+<script>
+    function calculateArrivalDate() {
+        const departureDateField = document.getElementById('departureDate');
+        const arrivalDateField = document.getElementById('arrivalDate');
+        const departureDate = new Date(departureDateField.value);
+
+        if (!isNaN(departureDate.getTime())) {
+            // Subtract 45 days from the departure date
+            departureDate.setDate(departureDate.getDate() - 45);
+
+            // Format the date to yyyy-mm-dd
+            const formattedDate = departureDate.toISOString().split('T')[0];
+
+            // Set the arrivalDate input value
+            arrivalDateField.value = formattedDate;
+        }
+    }
+
+    document.getElementById('departureDate').addEventListener('change', calculateArrivalDate);
+
+    // Call the function on page load if the form is in edit mode
+    document.addEventListener('DOMContentLoaded', function() {
+        const departureDateField = document.getElementById('departureDate');
+        if (departureDateField.value) {  // Check if the field has a value, indicating edit mode
+            calculateArrivalDate();
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('[id^="productSelect_"]').forEach(selectElement => {
+        selectElement.addEventListener('change', function () {
+            if (this.value === 'new') {
+                $('#addItemModal').modal('show');
+                this.value = ''; // Reset the dropdown value
+            }
+        });
+    });
+</script>
+
+
+</body>
+</html>

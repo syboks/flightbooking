@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Booking Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style5.css}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<!-- Navbar -->
+<div th:replace="fragments/navbar :: navbar"></div>
+<div class="container">
+
+    <div class="container">
+        <h3>Booking Details</h3>
+        <div class="row">
+            <div class="col-md-4">
+                <table class="table blue-table">
+                    <tr>
+                        <th>Customer</th>
+                        <td th:text="${booking.customer.firstName} + ' ' + ${booking.customer.lastName}"></td>
+                    </tr>
+                    <tr>
+                        <th>Package</th>
+                        <td th:text="${booking.pkg.name}"></td>
+                    </tr>
+                    <tr >
+                        <th>Price</th>
+                        <td  th:text="${booking.price}" class="highlight priceCell"></td>
+                    </tr>
+                    <tr >
+                        <th>Total Paid</th>
+                        <td th:text="${booking.totalPaid}"  class="highlight priceCell"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <table class="table blue-table">
+                    <tr>
+                        <th>Budget</th>
+                        <td th:text="${booking.budget}" class="highlight priceCell"></td>
+                    </tr>
+                    <tr>
+                        <th>Actual</th>
+                        <td th:text="${booking.actual}" class="highlight priceCell"></td>
+                    </tr>
+                    <tr>
+                        <th>Variance</th>
+                        <td th:text="${booking.variance}"
+                            th:classappend="${booking.variance < 0} ? 'text-danger' : 'text-success'">
+                            <span th:if="${booking.variance < 0}">
+                                <i class="fas fa-arrow-down"></i> <span th:text="${booking.variance}" class="highlight priceCell"></span>
+                            </span>
+                            <span th:if="${booking.variance >= 0}">
+                                 <i class="fas fa-arrow-up"></i> <span th:text="${booking.variance}" class="highlight priceCell"></span>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Our Margin</th>
+                        <td th:text="${booking.margin}" class="highlight priceCell"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <table class="table blue-table">
+                    <tr>
+                        <th>Travel Date</th>
+                        <td th:text="${booking.departureDate}"></td>
+                    </tr>
+                    <tr>
+                        <th>Payment Deadline</th>
+                        <td th:text="${booking.arrivalDate}" class="highlight2"></td>
+                    </tr>
+                    <tr>
+                        <th>Visa Type</th>
+                        <td th:text="${booking.visa}"></td>
+                    </tr>
+                    <tr>
+                        <th>Balance</th>
+                        <td th:text="${booking.balance}" class="highlight priceCell"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <table class="table blue-table">
+                    <tr>
+                        <th>Consultant</th>
+                        <td th:text="${booking.salesRep}"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <table class="table blue-table">
+                    <tr>
+                        <th>PAX</th>
+                        <td th:text="${booking.numAdults}"></td>
+                        <td th:text="${booking.numChildren}"></td>
+                        <td th:text="${booking.numInfants}"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <table class="table blue-table">
+                    <tr>
+                        <th>Payment Status</th>
+                        <td th:text="${booking.paymentStatus}"  class="highlight"></td>
+                    </tr>
+                    <tr>
+                        <th>Booking Status</th>
+                        <td th:text="${booking.bookingStatus}"  class="highlight"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div id="modalContainer"></div>
+    <div class="row">
+        <div class="container-box">
+            <h6>Products</h6>
+            <table class="table blue-table">
+                <thead>
+                <tr>
+                    <!--                        <th>ID</th>-->
+                    <th>Product Id</th>
+                    <th>Product Name</th>
+                    <th>Budget</th>
+                    <th>Actual</th>
+                    <th>Start Date</th>
+                    <th>Pymnt Deadline</th>
+                    <th># of Days</th>
+                    <th>Platform</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${booking.products}">
+                    <form th:action="@{/updateProductActual}" method="post">
+<!--                        <input type="hidden" th:field="*{id}" th:value="${product.id}" />-->
+                        <input type="hidden" th:name="id" th:value="${product.id}" />
+                        <td th:text="${product.id}"></td>
+                    <td th:text="${product.productName}"></td>
+                    <td th:text="${product.price}" class="priceCell"></td>
+                    <td th:text="${product.actual}" class="priceCell"></td>
+                    <td th:text="${product.startDate}"></td>
+                    <td th:text="${product.paymentDeadlineDate}"></td>
+                    <td th:text="${product.numDays}"></td>
+                    <td th:text="${product.platform}"></td>
+                        <td>
+
+                            <a href="#" class="btn-sm btn-success btn-space editBtn"
+                               th:attr="data-product-id=${product.id}"
+                               onclick="openEditModal(this);">Update Actual</a>
+                        </td>
+
+                    </form>
+                </tr>
+                <tr th:if="${booking.products.empty}">
+                    <td colspan="7">No products are associated with this booking.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!--    ===
+
+    <!-- New Section: Payments -->
+    <div class="container-box">
+        <h6>Payments</h6>
+        <table class="table blue-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Transaction Date</th>
+                <th>Amount Paid</th>
+                <th>Receipt Number</th>
+                <th>Payment Method</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="payment : ${booking.payments}">
+                <td th:text="${payment.id}"></td>
+                <td th:text="${payment.transactionDate}"></td>
+                <td th:text="${payment.amountPaid}"  class="priceCell"></td>
+                <td th:text="${payment.receiptNo}"></td>
+                <td th:text="${payment.paymentMethod}"></td>
+                <td>
+                    <a href="#" class="btn-sm btn-danger btn-space editBtn"
+                      >Reverse Payment</a>
+                </td>
+            </tr>
+            <tr th:if="${booking.payments.empty}">
+                <td colspan="4">No payments have been made for this booking.</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="mt-3">
+            <a th:href="@{/bookings/makePayment(id=${booking.id})}" class="btn btn-success" th:if="${booking.id != null}">Make Payment</a>
+
+            <a th:href="@{/bookings}" class="btn btn-secondary">Back to Bookings List</a>
+        </div>
+       <div>
+
+
+
+    </div>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#customerTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthChange": false,
+            "pageLength": 10,
+            "dom": 'Bfrtip',  // Add this line to show the buttons
+            "buttons": [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+        // Add click event listener to each row
+        $('#customerTable tbody').on('click', 'tr', function() {
+            const id = $(this).data('id'); // Get the ID from the row's data-id attribute
+            if (id) {
+                window.location.href = '/customers/details/' + id; // Redirect to the details page
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.priceCell').forEach(cell => {
+            let price = parseFloat(cell.textContent);
+            if (!isNaN(price)) {
+                cell.textContent = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'ZAR'
+                }).format(price);
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        // Open the modal and populate it with product data
+        $('.editBtn').click(function() {
+            var button = $(this);
+            var productId = button.data('id');
+            var productName = button.data('product-name');
+            var price = button.data('price');
+            var actual = button.data('actual');
+            var startDate = button.data('start-date');
+            var paymentDeadline = button.data('payment-deadline');
+            var numDays = button.data('num-days');
+            var platform = button.data('platform');
+
+            var modal = $('#editProductModal');
+            modal.find('input[name="id"]').val(productId);
+            modal.find('input[name="productName"]').val(productName);
+            modal.find('input[name="price"]').val(price);
+            modal.find('input[name="actual"]').val(actual);
+            modal.find('input[name="startDate"]').val(startDate);
+            modal.find('input[name="paymentDeadlineDate"]').val(paymentDeadline);
+            modal.find('input[name="numDays"]').val(numDays);
+            modal.find('input[name="platform"]').val(platform);
+        });
+    });
+</script>
+<script>
+    function openEditModal(element) {
+        /*scrollPosition = window.pageYOffset;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollPosition}px`;*/
+        var productId = $(element).attr("data-product-id");
+        $.ajax({
+            url: '/products/edit/' + productId,
+            type: 'GET',
+            success: function (data) {
+                $('#modalContainer').html(data); // Inject modal content into container
+                $('#editProductModal').modal('show'); // Show modal
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

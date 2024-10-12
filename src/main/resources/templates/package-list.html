@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="_layout" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Package List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" th:href="@{/css/style5.css}" />>
+</head>
+<body>
+<!-- Navbar -->
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container">
+    <div class="container-box">
+        <h3>Package List</h3>
+        <table id="packageTable" class="display" border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Status</th>
+
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="pkg : ${packages}">
+        <td th:text="${pkg.id}"></td>
+        <td th:text="${pkg.name}"></td>
+        <td th:text="${pkg.description}"></td>
+        <td th:text="${pkg.price}"></td>
+        <td th:text="${pkg.startDate}"></td>
+        <td th:text="${pkg.endDate}"></td>
+        <td th:text="${pkg.status}"></td>
+
+        <td>
+<!--            <a th:href="@{/packages/details/{id}(id=${pkg.id})}">Details</a>|-->
+            <a  th:href="@{/packages/edit/{id}(id=${pkg.id})}">Edit</a>|
+            <a sec:authorize="hasAuthority('admin')" th:href="@{/packages/delete/{id}(id=${pkg.id})}" onclick="return confirm('Are you sure?');">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+        <br/>
+        <a th:href="@{/packages/new}">Add New Package</a>
+</div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#packageTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthChange": false,
+            "pageLength": 10,
+            "dom": 'Bfrtip',  // Add this line to show the buttons
+            "buttons": [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+        // Add click event listener to each row
+        $('#packageTable tbody').on('click', 'tr', function() {
+            const id = $(this).data('id'); // Get the ID from the row's data-id attribute
+            if (id) {
+                window.location.href = '/customers/details/' + id; // Redirect to the details page
+            }
+        });
+    });
+</script>
+
+
+</body>
+</html>

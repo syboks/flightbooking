@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Customer List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" th:href="@{/css/style5.css}" />
+</head>
+<body>
+<!-- Navbar -->
+<!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Blacktrotters</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/customers}">Customers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/bookings}">Bookings</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/packages}">Packages</a>
+            </li>
+            <li class="nav-item">
+                <button class="myBtn-light me-5" onclick="window.location.href='/logout'">Logout</button>
+            </li>
+
+        </ul>
+    </div>
+</nav>-->
+<div th:replace="fragments/navbar :: navbar"></div>
+
+
+
+<div class="container">
+<h1>Customer List</h1>
+    <!--<form th:insert="@{/logout}" method="post">
+       <input type="submit" value="Logout">
+    </form>-->
+    <a th:href="@{/customers/new}" class="btn btn-primary">Add New Customer</a>
+<table id="customerTable" class="display" border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Passport No</th>
+<!--        <th>ID No</th>-->
+        <th>Email</th>
+        <th>Phone No</th>
+       <!-- <th>Address</th>
+        <th>Next of Kin</th>-->
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="customer : ${customers}">
+        <td th:text="${customer.id}"></td>
+        <td th:text="${customer.firstName}"></td>
+        <td th:text="${customer.lastName}"></td>
+        <td th:text="${customer.passportNo}"></td>
+<!--        <td th:text="${customer.idNo}"></td>-->
+        <td th:text="${customer.email}"></td>
+        <td th:text="${customer.phoneNo}"></td>
+       <!-- <td th:text="${customer.address}"></td>
+        <td th:text="${customer.nextOfKin}"></td>-->
+        <td>
+
+            <a sec:authorize="hasAuthority('admin')" th:href="@{/customers/edit/{id}(id=${customer.id})}" class="button btn btn-primary">Edit</a> |
+            <a sec:authorize="hasAuthority('admin')" th:href="@{/customers/delete/{id}(id=${customer.id})}"class="button btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>|
+            <a th:href="@{/customers/details/{id}(id=${customer.id})}" class="button btn btn-success">Details</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+    <div sec:authorize="isAuthenticated()">
+        <p>You are logged in with roles: <span sec:authentication="principal.authorities"></span></p>
+    </div>
+</div>
+<br/>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
+        var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+            return new bootstrap.Dropdown(dropdownToggleEl)
+        })
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#customerTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthChange": false,
+            "pageLength": 10,
+            "dom": 'Bfrtip',  // Add this line to show the buttons
+            "buttons": [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+        // Add click event listener to each row
+        $('#customerTable tbody').on('click', 'tr', function() {
+            const id = $(this).data('id'); // Get the ID from the row's data-id attribute
+            if (id) {
+                window.location.href = '/customers/details/' + id; // Redirect to the details page
+            }
+        });
+    });
+</script>
+</body>
+</html>
